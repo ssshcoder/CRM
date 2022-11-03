@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM</title>
+    <link rel="shortcut icon" href="./img/favicon.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="app" id="app">
+
+        <div class="header">
+            <div class="container header__container">
+                <div class="header__icon">scb.</div>
+                <input type="text" class="header__search" placeholder="Введите запрос">
+            </div>
+        </div>
+
+        <section class="clients">
+
+            <div class="container clients__container">
+                <h1 class="clients__titile">Клиенты</h1>
+                <table class="clients__table table">
+                    <thead class="table__head">
+                        <tr class="table__tr_head">
+                            <th class="table__th">ID 
+                                <svg class="table__arrow arrow-up " width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 4L7.295 3.295L4.5 6.085L4.5 0L3.5 0L3.5 6.085L0.71 3.29L0 4L4 8L8 4Z" fill="#9873FF"/>
+                                </svg>
+                            </th> 
+                            <th class="table__th">Фамилия Имя Отчество 
+                                <svg class="table__arrow" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 4L7.295 3.295L4.5 6.085L4.5 0L3.5 0L3.5 6.085L0.71 3.29L0 4L4 8L8 4Z" fill="#9873FF"/>
+                                </svg> <span>А-Я</span></th>
+                            <th class="table__th">Дата и время создания 
+                                <svg class="table__arrow" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 4L7.295 3.295L4.5 6.085L4.5 0L3.5 0L3.5 6.085L0.71 3.29L0 4L4 8L8 4Z" fill="#9873FF"/>
+                                </svg>
+                            </th>
+                            <th class="table__th">Последние изменения
+                                <svg class="table__arrow" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 4L7.295 3.295L4.5 6.085L4.5 0L3.5 0L3.5 6.085L0.71 3.29L0 4L4 8L8 4Z" fill="#9873FF"/>
+                                </svg>
+                            </th>
+                            <th class="table__th">Контакты</th>
+                            <th class="table__th">Действия</th>
+                        </tr>  
+                    </thead>
+                    <tbody class="table__body table-body">
+
+                        <!-- примерные карточки клиента / в конце можно УДАЛИТЬ -->
+                        <!-- <tr class="table-body__row client">
+                            <td class="table-body__item  table-body__id">123455</td>
+                            <td class="table-body__item">Скворцов Денис Юрьевич</td>
+                            <td class="table-body__item">21.02.2021 <span>12:41</span></td>
+                            <td class="table-body__item">21.02.2021 <span>12:41</span></td>
+                            <td class="table-body__item">+6</td>
+                            <td class="table-body__item ">
+                                <div class="table-body__actions">
+                                    <button class="table-body__btn change-btn">
+                                        <svg class="change-btn__svg" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0 10.5002V13.0002H2.5L9.87333 5.62687L7.37333 3.12687L0 10.5002ZM11.8067 3.69354C12.0667 3.43354 12.0667 3.01354 11.8067 2.75354L10.2467 1.19354C9.98667 0.933535 9.56667 0.933535 9.30667 1.19354L8.08667 2.41354L10.5867 4.91354L11.8067 3.69354Z" fill="#9873FF"/>
+                                        </svg>
+                                        <svg class="spinner change-btn__svg" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1.00008 6.04008C1.00008 8.82356 3.2566 11.0801 6.04008 11.0801C8.82356 11.0801 11.0801 8.82356 11.0801 6.04008C11.0801 3.2566 8.82356 1.00008 6.04008 1.00008C5.38922 1.00008 4.7672 1.12342 4.196 1.34812" stroke="#9873FF" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+                                        </svg>
+                                        Изменить
+                                    </button>
+                                    <button class="table-body__btn delete-btn">
+                                        <svg class="change-btn__svg" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6 0C2.682 0 0 2.682 0 6C0 9.318 2.682 12 6 12C9.318 12 12 9.318 12 6C12 2.682 9.318 0 6 0ZM6 10.8C3.354 10.8 1.2 8.646 1.2 6C1.2 3.354 3.354 1.2 6 1.2C8.646 1.2 10.8 3.354 10.8 6C10.8 8.646 8.646 10.8 6 10.8ZM8.154 3L6 5.154L3.846 3L3 3.846L5.154 6L3 8.154L3.846 9L6 6.846L8.154 9L9 8.154L6.846 6L9 3.846L8.154 3Z" fill="#F06A4D"/>
+                                        </svg>
+                                        <svg class="change-btn__svg spinner" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1.00008 6.04008C1.00008 8.82356 3.2566 11.0801 6.04008 11.0801C8.82356 11.0801 11.0801 8.82356 11.0801 6.04008C11.0801 3.2566 8.82356 1.00008 6.04008 1.00008C5.38922 1.00008 4.7672 1.12342 4.196 1.34812" stroke="#F06A4D" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+                                        </svg>
+                                        Удалить
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="table-body__row client">
+                            <td class="table-body__item  table-body-id">123451 </td>
+                            <td class="table-body__item">Gtd6 Денис Юрьевич</td>
+                            <td class="table-body__item">21.02.2021 <span>12:41</span></td>
+                            <td class="table-body__item">21.02.2021 <span>12:41</span></td>
+                            <td class="table-body__item">
+                                <div class="table-body__contacts ">
+                                    <a href="#" target="_blank" class="table-body__contact contact-vk">
+                                        <div class="tooltip">
+                                            <span class="tooltip__contact-link">https://vk.com/id228442535</span>
+                                        </div>
+                                    </a>
+                                    <a href="#" target="_blank" class="table-body__contact contact-fb"></a>
+                                    <a href="#" target="_blank" class="table-body__contact contact-tel"></a>
+                                    <a href="#" target="_blank" class="table-body__contact contact-email"></a>
+                                    <a href="#" target="_blank" class="table-body__contact contact"></a>
+                                </div>
+                            </td>
+                            <td class="table-body__item ">
+                                <div class="table-body__actions">
+                                    <button class="table-body__btn change-btn">
+                                        <svg class="change-btn__svg" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0 10.5002V13.0002H2.5L9.87333 5.62687L7.37333 3.12687L0 10.5002ZM11.8067 3.69354C12.0667 3.43354 12.0667 3.01354 11.8067 2.75354L10.2467 1.19354C9.98667 0.933535 9.56667 0.933535 9.30667 1.19354L8.08667 2.41354L10.5867 4.91354L11.8067 3.69354Z" fill="#9873FF"/>
+                                        </svg>
+                                        <svg class="spinner change-btn__svg" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1.00008 6.04008C1.00008 8.82356 3.2566 11.0801 6.04008 11.0801C8.82356 11.0801 11.0801 8.82356 11.0801 6.04008C11.0801 3.2566 8.82356 1.00008 6.04008 1.00008C5.38922 1.00008 4.7672 1.12342 4.196 1.34812" stroke="#9873FF" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+                                        </svg>
+                                        Изменить
+                                    </button>
+                                    <button class="table-body__btn delete-btn">
+                                        <svg class="change-btn__svg" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6 0C2.682 0 0 2.682 0 6C0 9.318 2.682 12 6 12C9.318 12 12 9.318 12 6C12 2.682 9.318 0 6 0ZM6 10.8C3.354 10.8 1.2 8.646 1.2 6C1.2 3.354 3.354 1.2 6 1.2C8.646 1.2 10.8 3.354 10.8 6C10.8 8.646 8.646 10.8 6 10.8ZM8.154 3L6 5.154L3.846 3L3 3.846L5.154 6L3 8.154L3.846 9L6 6.846L8.154 9L9 8.154L6.846 6L9 3.846L8.154 3Z" fill="#F06A4D"/>
+                                        </svg>
+                                        <svg class="change-btn__svg spinner" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1.00008 6.04008C1.00008 8.82356 3.2566 11.0801 6.04008 11.0801C8.82356 11.0801 11.0801 8.82356 11.0801 6.04008C11.0801 3.2566 8.82356 1.00008 6.04008 1.00008C5.38922 1.00008 4.7672 1.12342 4.196 1.34812" stroke="#F06A4D" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round"/>
+                                        </svg>
+                                        Удалить
+                                    </button>
+                                </div>
+                            </td>
+                        </tr> -->
+
+                    </tbody>
+                </table>
+
+                <div class="add-client-container">
+                    <button class="add-client-btn btn-secondary">
+                        <svg width="23" height="16" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.5 8C16.71 8 18.5 6.21 18.5 4C18.5 1.79 16.71 0 14.5 0C12.29 0 10.5 1.79 10.5 4C10.5 6.21 12.29 8 14.5 8ZM5.5 6V3H3.5V6H0.5V8H3.5V11H5.5V8H8.5V6H5.5ZM14.5 10C11.83 10 6.5 11.34 6.5 14V16H22.5V14C22.5 11.34 17.17 10 14.5 10Z" fill="#9873FF"/>
+                        </svg>
+                        Добавить клиента
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+<!--                                         POPUPS                  -->
+
+ <!--           popup (Изменить данные)         -->
+
+        <div class="popup change-data-popup">
+            <div class="popup__body">
+
+                <div class="popup__content">
+
+                    <div class="popup__title-section popup-container">
+                        <button class="popup__close">
+                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2333 1.73333L15.2666 0.766664L8.49991 7.53336L1.73324 0.766696L0.766576 1.73336L7.53324 8.50003L0.766603 15.2667L1.73327 16.2333L8.49991 9.46669L15.2666 16.2334L16.2332 15.2667L9.46657 8.50003L16.2333 1.73333Z" fill="#B0B0B0"/>
+                            </svg>
+                        </button>
+                        <div class="popup__title-container">
+                            <h2 class="popup__title">
+                                Изменить данные
+                            </h2>
+                            <div class="popup__id">ID:123456</div>
+                        </div>
+                    </div>
+
+                    <form class="popup__form change-data-form">
+                        
+                        <div class="change-data-form__FIO-wrapper popup-container">
+                            <p class="change-data-form__descr">Фамилия*</p>
+                            <input type="text" class="change-data-form__input">
+                            <p class="change-data-form__descr">Имя*</p>
+                            <input type="text" class="change-data-form__input">
+                            <p class="change-data-form__descr">Отчество</p>
+                            <input type="text" class="change-data-form__input">
+                        </div>
+                    
+
+                        <div class="contacts-section popup-container change-data-form__contacts-section">
+
+                            <div class="contacts-section__contacts-container">
+                                <div class="contacts-section__contact">
+
+                                    <select name="contact-type" class="contact__select select">
+                                        <option value="tel" class="select__option">Телефон</option>
+                                        <option value="tel">Доп. телефон</option>
+                                        <option value="tel">Email</option>
+                                        <option value="tel">Vk</option>
+                                        <option value="tel">Facebook</option>
+                                    </select>
+                                    <input type="text" class="contact__input" placeholder="Введите данные контакта">
+                                    <button class="contact__clear-btn">
+                                    </button>
+
+                                </div> 
+                            </div>
+
+                            <div class="contacts-section__add-btn-container">
+                                <button class="contacts-section__add-btn">
+                                    Добавить контакт
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="change-data-form__popup-buttons popup-buttons">
+                            <div class="popup-buttons__error">Ошибка: новая модель организационной деятельности предполагает независимые способы реализации поставленных обществом задач!</div>
+                            <button type="submit" class="popup-buttons__save-btn btn-primary">Сохранить</button>
+                            <button class="popup-buttons__cancel-btn">Удалить клиента</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+ <!--             popup (Добавить клиента)         -->
+
+        <div class="popup new-client-popup">
+            <div class="popup__body">
+
+                <div class="popup__content">
+
+                    <div class="popup__title-section popup-container">
+                        <button class="popup__close">
+                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2333 1.73333L15.2666 0.766664L8.49991 7.53336L1.73324 0.766696L0.766576 1.73336L7.53324 8.50003L0.766603 15.2667L1.73327 16.2333L8.49991 9.46669L15.2666 16.2334L16.2332 15.2667L9.46657 8.50003L16.2333 1.73333Z" fill="#B0B0B0"/>
+                            </svg>
+                        </button>
+                        <div class="popup__title-container">
+                            <div class="popup__title">
+                                Новый клиент
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <form class="popup__form new-client-form">
+                    
+                        <div class="new-client-form__FIO-wrapper popup-container">
+                            <p class="change-data-form__descr">Фамилия<span>*</span></p>
+                            <input type="text" class="change-data-form__input">
+                            <p class="change-data-form__descr">Имя<span>*</span></p>
+                            <input type="text" class="change-data-form__input">
+                            <p class="change-data-form__descr">Отчество</p>
+                            <input type="text" class="change-data-form__input">
+                        </div>
+
+                        <div class="popup__section contacts-section popup-container">
+
+                            <div class="contacts-section__contacts-container">
+
+                                <!-- <div class="contacts-section__contact contact">
+                                    <select name="contact-type" class="contact__select select">
+                                        <option value="tel" class="select__option">Телефон</option>
+                                        <option value="tel">Доп. телефон</option>
+                                        <option value="tel">Email</option>
+                                        <option value="tel">Vk</option>
+                                        <option value="tel">Facebook</option>
+                                    </select>
+                                    <input type="text" class="contact__input" placeholder="Введите данные контакта">
+                                    <button class="contact__clear-btn">
+                                    </button>
+                                </div>  -->
+
+                            </div>
+
+                            <div class="contacts-section__add-btn-container">
+                                <button class="contacts-section__add-btn">
+                                    Добавить контакт
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="popup-buttons new-client-form__popup-buttons">
+                            <div class="popup-buttons__error">Ошибка: новая модель организационной деятельности предполагает независимые способы реализации поставленных обществом задач!</div>
+                            <button type="submit" class="popup-buttons__save-btn btn-primary">Сохранить</button>
+                            <button class="popup-buttons__cancel-btn">Отмена</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+ <!--             popup (Удалить клиента)         -->
+
+        <div class="popup delete-client-popup ">
+            <div class="popup__body">
+                <div class="popup__content delete-client-popup-content">
+                    <button class="popup__close delete-client-popup-close">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2333 1.73333L15.2666 0.766664L8.49991 7.53336L1.73324 0.766696L0.766576 1.73336L7.53324 8.50003L0.766603 15.2667L1.73327 16.2333L8.49991 9.46669L15.2666 16.2334L16.2332 15.2667L9.46657 8.50003L16.2333 1.73333Z" fill="#B0B0B0"/>
+                        </svg>
+                    </button>
+                    <h2 class="popup__header">Удалить клиента</h2>
+                    <p class="popup__descr">Вы действительно хотите удалить данного клиента?</p>
+                    <div class="popup-buttons delete-client-popup__popup-buttons">
+                        <button type="submit" class="popup-buttons__save-btn popup-buttons__delete-btn btn-primary">Удалить</button>
+                        <button class="popup-buttons__cancel-btn">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
