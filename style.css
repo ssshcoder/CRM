@@ -120,9 +120,6 @@ body {
     margin-bottom: 10px;
 }
 
-.clients__table {
-}
-
 .table {
     width: 100%;
     border-spacing: 0;
@@ -132,9 +129,6 @@ body {
 
 .table__head {
     background-color: transparent;
-}
-
-.table__tr_head {
 }
 
 .table__th {
@@ -149,7 +143,20 @@ body {
     padding-left: 20px;
 }
 
-.table__arrow.arrow-up  {
+.is-active {
+    color: #9873FF;
+}
+
+.sorting-btn {
+    cursor: pointer;
+    transition: color .3s ease;
+}
+
+.sorting-btn:hover {
+    color: #9873FF;
+}
+
+.sorting-btn.arrow-up .table__arrow  {
     transform: rotate(-180deg);
 }
 
@@ -188,6 +195,7 @@ body {
 
 .tooltip {
     position: absolute;
+    display: flex;
     bottom: 24px;
     left: 50%;
     visibility: hidden;
@@ -198,9 +206,12 @@ body {
     font-weight: 700;
     font-size: 12px;
     line-height: 16px;
-
     color: #FFFFFF;
     transition: opacity .3s ease, visibility .3s ease;
+}
+
+.tooltip span {
+    margin-left: 5px;
 }
 
 .tooltip::after {
@@ -419,11 +430,6 @@ body {
     color: #B0B0B0;
 }
 
-.popup__form {
-}
-.change-data-form {
-}
-
 .new-client-form__FIO-wrapper {
     margin-bottom: 25px;
 }
@@ -456,9 +462,6 @@ body {
     margin-bottom: 0;
 }
 
-.popup__contacts {
-}
-
 .contacts-section {
     background-color: rgba(200, 197, 209, 0.2);
     margin-bottom: 25px;
@@ -481,6 +484,18 @@ body {
     border: 1px solid #C8C5D1;
     border-right: none;
     padding:  0 0 0 12px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: #333333;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.select__option {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: #333333;
 }
 
 .contact__input {
@@ -490,6 +505,8 @@ body {
     border-right: none;
     padding-left: 12px;
     flex-grow: 1;
+    font-family: 'Open Sans', sans-serif;
+
 }
 
 .contact__clear-btn {
@@ -567,8 +584,6 @@ body {
 
 /*                      POPUP  (new client data)           */
 
-.new-client-popup {
-}
 
 /*                      POPUP  (delete client)           */
 

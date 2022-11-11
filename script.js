@@ -1,68 +1,86 @@
 (async function() {
+
    // ПЕРЕМЕННЫЕ
 
    const addClientBtn = document.querySelector('.add-client-btn')
+   const searchInput = document.querySelector('.header__search')
+
+   const sortingBtns = document.querySelectorAll('.sorting-btn')
+   const IDBtn = document.querySelector('.ID-sorting-btn')
+   const FIOBtn = document.querySelector('.FIO-sorting-btn')
+   const createdAtBtn = document.querySelector('.creation-data-sorting-btn')
+   const updatedAtBtn = document.querySelector('.last-changes-sorting-btn')
+
+   let contactsNum // вспомогательная переменная для счета контактов в открытом попапе
+
+
    let clientsArray = await getClients()
-   let tableElements = refreshTable(clientsArray)
+   let tableElements
+   tableElements = refreshTable(clientsArray)
 
 
    // СЛУЖЕБНОЕ (удалить в конце)
 
-      // пример нового клиента
-   const clData = {
-      name: 'Света',
-      surname: 'Логинова',
-      lastName: 'Алексеевна',
-      contacts: [
-        {
-          type: 'Телефон',
-          value: '+71234567899'
-        },
-        {
-          type: 'Email',
-          value: 'abc@xцyz.com'
-        },
-        {
-         type: 'vk',
-         value: '1abc@xцyz.com'
-       },
-       {
-         type: 'vk',
-         value: '2abc@xцyz.com'
-       },
+   //    // пример нового клиента
+   // const clData = {
+   //    name: 'Света',
+   //    surname: 'Логинова',
+   //    lastName: 'Алексеевна',
+   //    contacts: [
+   //      {
+   //        type: 'Телефон',
+   //        value: '+71234567899'
+   //      },
+   //      {
+   //        type: 'Email',
+   //        value: 'abc@xцyz.com'
+   //      },
+   //      {
+   //       type: 'vk',
+   //       value: '1abc@xцyz.com'
+   //     },
+   //     {
+   //       type: 'vk',
+   //       value: '2abc@xцyz.com'
+   //     },
        
         
         
-      ]
-   }
-      // тоже но для теста обновления данных о клиенте
-   const newClData = {
-      name: 'Артем',
-      surname: 'Гурков',
-      lastName: 'Васильевич',
-      contacts: [
-        {
-          type: 'Телефон',
-          value: '+71234567899'
-        },
-        {
-          type: 'Email',
-          value: 'abc@xцyz.com'
-        },
-        {
-          type: 'Facebook',
-          value: 'https://facebook.com/vasiliy-pupkin-the-best'
-        }
-      ]
-   }
+   //    ]
+   // }
+   //    // тоже но для теста обновления данных о клиенте
+   // const newClData = {
+   //    name: 'Артем',
+   //    surname: 'Гурков',
+   //    lastName: 'Васильевич',
+   //    contacts: [
+   //      {
+   //        type: 'Телефон',
+   //        value: '+71234567899'
+   //      },
+   //      {
+   //        type: 'Email',
+   //        value: 'abc@xцyz.com'
+   //      },
+   //      {
+   //        type: 'Facebook',
+   //        value: 'https://facebook.com/vasiliy-pupkin-the-best'
+   //      }
+   //    ]
+   // }
 
-   console.log(tableElements)
-   console.log(clientsArray)  
+   // function clg(message) {
+   //    console.log(message)
+   // }
+
+   // console.log(tableElements)
+   // console.log(clientsArray)  
    // addClient(clData)
    
 
    // ФУНКЦИИ
 
+   // функции связаные с взаимодействием с сервером
    async function getClients() {
       let res = await fetch('http://localhost:3000/api/clients')
 
@@ -115,7 +133,7 @@
    tooltipSpan.classList.add('tooltipSpan')
 
    // условия
-   if (contactData.type == 'Телефон') {
+   if (contactData.type == 'Телефон' || contactData.type == 'Доп.телефон') {
       contactContainer.classList.add('contact-tel')
    } else if (contactData.type == 'Email') {
       contactContainer.classList.add('contact-email')
@@ -128,7 +146,8 @@
       contactContainer.href = contactData.value
       contactContainer.target = '_blank'
    }
-   tooltip.textContent = contactData.value
+   tooltip.textContent = `${contactData.type}:`
+   tooltipSpan.textContent = contactData.value
 
    // помещаю
    contactContainer.append(tooltip)
@@ -139,10 +158,126 @@
 
    }
 
+
+   // функции связаные с сортировкой и поиском
+   async function searchClients(inputValue) {
+
+      // получаю список клиентов
+      const clients = await getClients()
+      console.log(clients)
+      // фильтрую список
+      const filtredArr = filterClients(clients)
+      // обновляю таблицу
+      tableElements = refreshTable(filtredArr)
+
+      // // функция фильтрации по ФИО и ID
+      function filterClients(arr) {
+
+      const result = arr.filter(function(client) {
+         const FIO = `${client.name.toLowerCase()} ${client.surname.toLowerCase()} ${client.lastName.toLowerCase()}`
+         const id = client.id
+         if (FIO.includes(searchInput.value.toLowerCase()) || id.includes(searchInput.value.toLowerCase())) return true
+
+      })
+      return result
+
+      }
+
+   }
+   
+   let SortedUP = false // вспомогательная переменная для корректной смены направления сортировки
+   function sortClients(arr, prop) {
+
+      // false - по возрастанию, true - по убыванию
+      let direction = false
+
+      // логика со сменой направления
+      if (!SortedUP) {
+         direction = false
+         SortedUP = true
+      } else {
+         direction = true
+         SortedUP = false
+      }
+
+      let copyArr = [...arr]
+      let result = copyArr.sort(function(a,b) {
+
+         
+         if (prop == 'ID') {
+            console.log('Сортирую по ID...')
+            for (const btn of sortingBtns) {
+               btn.classList.remove('is-active')
+            }
+            IDBtn.classList.add('is-active')
+
+            let dirCondition = a["id"] < b["id"]
+            if (direction) dirCondition = a["id"] > b["id"]
+            if (dirCondition) return -1
+         } else
+
+         if (prop == 'FIO') {
+            console.log('Сортирую по FIO...')
+            for (const btn of sortingBtns) {
+               btn.classList.remove('is-active')
+            }
+            FIOBtn.classList.add('is-active')
+            
+            let fullNameA = `${a['name']} ${a['surname']} ${a['lastName']}`
+            let fullNameB = `${b['name']} ${b['surname']} ${b['lastName']}`
+            let dirCondition = fullNameA < fullNameB
+            if (direction) dirCondition = fullNameA > fullNameB
+            
+            if (dirCondition) return -1
+         } else
+
+         if (prop == 'updatedAt') {
+            console.log('Сортирую по updatedAt...')
+            for (const btn of sortingBtns) {
+               btn.classList.remove('is-active')
+            }
+            updatedAtBtn.classList.add('is-active')
+
+            let dirCondition = new Date(a["updatedAt"]).getTime() < new Date(b["updatedAt"]).getTime()
+            if (direction) dirCondition = new Date(a["updatedAt"]).getTime() > new Date(b["updatedAt"]).getTime()
+            if (dirCondition) return -1
+         } else
+
+         if (prop == 'createdAt') {
+            console.log('Сортирую по createdAt...')
+            for (const btn of sortingBtns) {
+               btn.classList.remove('is-active')
+            }
+            createdAtBtn.classList.add('is-active')
+
+            let dirCondition = new Date(a["createdAt"]).getTime() < new Date(b["createdAt"]).getTime()
+            console.log(new Date(a["createdAt"]).getTime())
+            if (direction) dirCondition = new Date(a["createdAt"]).getTime() > new Date(b["createdAt"]).getTime()
+            if (dirCondition) return -1
+         }
+            
+         })
+         console.log(result)
+         tableElements = refreshTable(result)
+         // refreshTable(tableElements)
+         return result
+   }
+
+
+   // функции связаные с взимодействием с DOM-деревом
    function refreshTable(arr) {
       const tableBody = document.querySelector('.table-body')
       const clientsElements = []
 
+      // очищаю таблицу от ранее созданных элементов (если есть)
+      if(tableElements) {
+         console.log('Удаляю ранее созданные элементы, создаю новые...')
+         for (const el of tableElements) {
+            el.remove()
+         }
+      }
+
+      // Создаю элемент(строку) для каждого обьекта(клиента)
       for (const client of arr) {
          // создаю элеметы таблицы (строки и столбцы)
          const tr = document.createElement('tr')
@@ -248,6 +383,7 @@
                }
 
             })
+
          } 
 
          contactsTd.append(contactsContainer)
@@ -275,6 +411,27 @@
          tableBody.append(tr)
          // помещаю строку в массив строк
          clientsElements.push(tr)
+  
+      }
+
+      // ОБРАБОТЧИКИ СОБЫТИЙ
+
+      // открытие попапа (изменить данные клиента) | навешивается на все кнопки 'Изменить'
+      let changeClientsDataButtons = document.querySelectorAll('.change-btn')
+      for (const changeBtn of changeClientsDataButtons) {
+         changeBtn.addEventListener('click', (e) => {
+            openChangeDataPopup(e.target)
+         })
+      }
+
+      // открытие попапа (удалить клиента) | навешивается на все кнопки 'Х Удалить' 
+      let deleteClientButtons = document.querySelectorAll('.delete-btn')
+      for (const deleteBtn of deleteClientButtons) {
+         deleteBtn.addEventListener('click', (e) => {
+            e.preventDefault()
+            const id = e.target.parentElement.parentElement.parentElement.children[0].textContent
+            openDeleteClientPopup(id)
+         })
       }
 
       return clientsElements
@@ -292,7 +449,7 @@
       }
    }
 
-   function makeContactLayout(inputValue, selectValue) {
+   function makeContactLayout(inputValue, selectValue, addContactBtn) {
       const contact = document.createElement('div')
       const select = document.createElement('select')
       const option_1 = document.createElement('option')
@@ -305,7 +462,7 @@
 
 
       contact.classList.add('contacts-section__contact', 'contact')
-      select.classList.add('contact__select', 'select')
+      select.classList.add('contact__select', 'select', 'js-choice')
       option_1.classList.add('select__option')
       option_2.classList.add('select__option')
       option_3.classList.add('select__option')
@@ -315,7 +472,7 @@
       button.classList.add('contact__clear-btn')
 
       option_1.value = 'Телефон'
-      option_2.value = 'additionTel'
+      option_2.value = 'Доп.телефон'
       option_3.value = 'Email'
       option_4.value = 'vk'
       option_5.value = 'Facebook'
@@ -333,7 +490,7 @@
 
       // устанавливает тип контакта
       selectValue == 'Телефон' ? option_1.selected = true : option_1.value.selected = true
-      selectValue == 'additionTel' ? option_2.selected = true : option_1.value.selected = true
+      selectValue == 'Доп.телефон' ? option_2.selected = true : option_1.value.selected = true
       selectValue == 'Email' ? option_3.selected = true : option_1.value.selected = true
       selectValue == 'vk' ? option_4.selected = true : option_1.value.selected = true
       selectValue == 'Facebook' ? option_5.selected = true : option_1.value.selected = true
@@ -352,9 +509,22 @@
          deleteContact(contact)
          console.log(`Удален контакт: `)
          console.log(contact)
+         contactsNum--
+         if (contactsNum <= 9) addContactBtn.style.display = 'block'
+         console.log(contactsNum)
       }
 
       button.addEventListener('click', del)
+
+      // // select
+      // const selectElements = document.querySelectorAll('.js-choice');
+   
+      // for (const el of selectElements) {
+      //    clg(selectElements)
+      //    const choices = new Choices(el, {
+      //       searchEnabled: false,
+      //    });
+      // }
 
       return contact
    }
@@ -362,10 +532,9 @@
    function addContact(popup, inputValue, selectValue) {
 
       const contactsContainer = popup.querySelector('.contacts-section__contacts-container')
-      const contact = makeContactLayout(inputValue, selectValue)
+      const addContactBtn = popup.querySelector('.contacts-section__add-btn')
+      const contact = makeContactLayout(inputValue, selectValue, addContactBtn)
       contactsContainer.append(contact)
-      console.log('-------------------------')
-      console.log(`Добавлен контакт, значение: ${inputValue}`)
 
       return contact
    }
@@ -395,20 +564,38 @@
       for (const contact of contactsContainer.children) {
          contact.remove()
       }
+      // очищаю поля ввода
+      for (const input of inputs) {
+         input.value = ''
+      }
             
       const contactsSection = popup.querySelector('.contacts-section')
-      let numberOfContacts = 0
+      contactsNum = 0
 
       // добавление контакта
       let f = function(e) {
-         e.preventDefault()
-         addContact(popup)
-         contactsSection.classList.add('with-paddings')
+         // проверка на количество контактов
+         if (contactsNum >= 9) {
+            e.preventDefault()
+            addContact(popup)
+            contactsNum++
+            console.log(contactsNum)
+            addContactBtn.style.display = 'none'
+         } else {
+            e.preventDefault()
+            addContact(popup)
+            contactsNum++
+            console.log(contactsNum)
+         }
+         // проверка на паддинги
+         if (contactsNum >= 1) {
+            contactsSection.classList.add('with-paddings')
+         } 
+
       }
       addContactBtn.addEventListener('click', f) 
 
       // Добавление нового клиента
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!
       async function saveNewClient(e) {
          e.preventDefault()
 
@@ -462,37 +649,37 @@
          console.log(`3. сечение`)
          console.log(clientsArray)
 
-         // НАВЕСИТЬ ОБРАБОТЧИКИ СОБЫТИЙ НА "НОВЫЕ" КНОПКИ!!!!!!
+         // // НАВЕСИТЬ ОБРАБОТЧИКИ СОБЫТИЙ НА "НОВЫЕ" КНОПКИ!!!!!!
 
-         // открытие попапа (изменить данные клиента) | навешивается на все кнопки 'Изменить'
-         let changeClientsDataButtons = document.querySelectorAll('.change-btn')
-         for (const changeBtn of changeClientsDataButtons) {
-            changeBtn.addEventListener('click', (e) => {
-               openChangeDataPopup(e.target)
-            })
-         }
+         // // открытие попапа (изменить данные клиента) | навешивается на все кнопки 'Изменить'
+         // let changeClientsDataButtons = document.querySelectorAll('.change-btn')
+         // for (const changeBtn of changeClientsDataButtons) {
+         //    changeBtn.addEventListener('click', (e) => {
+         //       openChangeDataPopup(e.target)
+         //    })
+         // }
 
-         // открытие попапа (удалить клиента) | навешивается на все кнопки 'Х Удалить' 
-         let deleteClientButtons = document.querySelectorAll('.delete-btn')
-         for (const deleteBtn of deleteClientButtons) {
-            deleteBtn.addEventListener('click', (e) => {
-               const id = e.target.parentElement.parentElement.parentElement.children[0].textContent
-               openDeleteClientPopup(id)
-            })
-         }
+         // // открытие попапа (удалить клиента) | навешивается на все кнопки 'Х Удалить' 
+         // let deleteClientButtons = document.querySelectorAll('.delete-btn')
+         // for (const deleteBtn of deleteClientButtons) {
+         //    deleteBtn.addEventListener('click', (e) => {
+         //       const id = e.target.parentElement.parentElement.parentElement.children[0].textContent
+         //       openDeleteClientPopup(id)
+         //    })
+         // }
 
       }
 
       saveClientBtn.addEventListener('click', saveNewClient)
 
       // функция закрытия попапа
-      function closePopup(e) {
-         // e.preventDefault()
+      function closePopup() {
 
          popup.classList.remove('open')
          document.body.style.overflow = 'auto'
 
          addContactBtn.removeEventListener('click', f)
+         saveClientBtn.removeEventListener('click', saveNewClient)
 
          for (const contact of contactsContainer.children) {
             contact.remove()
@@ -548,6 +735,7 @@
       // удаление клиента
          // функция 
       let del = function(e) {
+         e.preventDefault()
          console.log(`Удален элемент с id: ${id}`)
          deleteClient(id)
          popup.classList.remove('open')
@@ -574,6 +762,8 @@
       const inputName = inputs[1]
       const inputSurname = inputs[0]
       const inputLast = inputs[2]
+      // количество контактов в попапе
+      contactsNum = 0
 
       // очистка контактов
       for (const contact of contactsContainer.children) {
@@ -600,8 +790,8 @@
       for (const contact of clientData.contacts) {
          addContact(popup, contact.value, contact.type)
          console.log(`Добавляю контакт со значением: ${contact.value}`)
+         contactsNum++
       }
-
 
       // логика добавления padding на секцию контакты
       const contactsSection = popup.querySelector('.contacts-section')
@@ -619,11 +809,27 @@
       document.body.style.overflow = 'hidden' 
 
 
-      // добавление контакта
+      // добавление нового контакта 
       let addCntc = function(e) {
-         e.preventDefault()
-         addContact(popup)
-         contactsSection.classList.add('with-paddings')
+
+         // проверка на количество контактов
+         if (contactsNum >= 9) {
+            e.preventDefault()
+            addContact(popup)
+            contactsNum++
+            console.log(contactsNum)
+            addContactBtn.style.display = 'none'
+         } else {
+            e.preventDefault()
+            addContact(popup)
+            contactsNum++
+            console.log(contactsNum)
+         }
+         // проверка на паддинги
+         if (contactsNum >= 1) {
+            contactsSection.classList.add('with-paddings')
+         } 
+
       }
       addContactBtn.addEventListener('click', addCntc)
 
@@ -690,37 +896,34 @@
          }
 
          clientsArray = await getClients()
-         console.log(`1. сечение`)
             // удаляю "устаревшие" tableElements 
          for (const item of tableElements) {
             item.remove()
          }
 
          closePopup()
-         console.log(`2. сечение`)
          tableElements = refreshTable(clientsArray)
 
-         console.log(`3. сечение`)
          console.log(clientsArray)
 
-         // НАВЕСИТЬ ОБРАБОТЧИКИ СОБЫТИЙ НА "НОВЫЕ" КНОПКИ!!!!!!
+         // // НАВЕСИТЬ ОБРАБОТЧИКИ СОБЫТИЙ НА "НОВЫЕ" КНОПКИ!!!!!!
 
-         // открытие попапа (изменить данные клиента) | навешивается на все кнопки 'Изменить'
-         let changeClientsDataButtons = document.querySelectorAll('.change-btn')
-         for (const changeBtn of changeClientsDataButtons) {
-            changeBtn.addEventListener('click', (e) => {
-               openChangeDataPopup(e.target)
-            })
-         }
+         // // открытие попапа (изменить данные клиента) | навешивается на все кнопки 'Изменить'
+         // let changeClientsDataButtons = document.querySelectorAll('.change-btn')
+         // for (const changeBtn of changeClientsDataButtons) {
+         //    changeBtn.addEventListener('click', (e) => {
+         //       openChangeDataPopup(e.target)
+         //    })
+         // }
 
-         // открытие попапа (удалить клиента) | навешивается на все кнопки 'Х Удалить' 
-         let deleteClientButtons = document.querySelectorAll('.delete-btn')
-         for (const deleteBtn of deleteClientButtons) {
-            deleteBtn.addEventListener('click', (e) => {
-               const id = e.target.parentElement.parentElement.parentElement.children[0].textContent
-               openDeleteClientPopup(id)
-            })
-         }
+         // // открытие попапа (удалить клиента) | навешивается на все кнопки 'Х Удалить' 
+         // let deleteClientButtons = document.querySelectorAll('.delete-btn')
+         // for (const deleteBtn of deleteClientButtons) {
+         //    deleteBtn.addEventListener('click', (e) => {
+         //       const id = e.target.parentElement.parentElement.parentElement.children[0].textContent
+         //       openDeleteClientPopup(id)
+         //    })
+         // }
 
       }
 
@@ -746,27 +949,61 @@
       }
    }
 
+   // Сортировка по умолчанию по ID по возрастанию
+   sortClients(clientsArray, 'ID')
+   if (SortedUP) IDBtn.classList.toggle('arrow-up')
+
+
 //        ОБРАБОТЧИКИ СОБЫТИЙ
 
    // открытие попапа (добавить клиента)| навешивается на кнопку 'Добавить клиента'
    addClientBtn.addEventListener('click', openAddClientPopup)
 
-   // открытие попапа (изменить данные клиента) | навешивается на все кнопки 'Изменить'
-   let changeClientsDataButtons = document.querySelectorAll('.change-btn')
-   for (const changeBtn of changeClientsDataButtons) {
-      changeBtn.addEventListener('click', (e) => {
-         openChangeDataPopup(e.target)
-      })
-   }
 
-   // открытие попапа (удалить клиента) | навешивается на все кнопки 'Х Удалить' 
-   let deleteClientButtons = document.querySelectorAll('.delete-btn')
-   for (const deleteBtn of deleteClientButtons) {
-      deleteBtn.addEventListener('click', (e) => {
-         const id = e.target.parentElement.parentElement.parentElement.children[0].textContent
-         openDeleteClientPopup(id)
-      })
+   // сортировка по ID | навешивается на кнопку "ID"
+   IDBtn.addEventListener('click', () => {
+      for (const bt of sortingBtns) {
+          bt.classList.remove('arrow-up')
+      }
+      sortClients(clientsArray, 'ID', true)
+      if (SortedUP) IDBtn.classList.toggle('arrow-up')
+  })
+
+  // сортировка по ФИО | навешивается на кнопку "Фамилия Имя Отчество"
+  FIOBtn.addEventListener('click', () => {
+   for (const bt of sortingBtns) {
+       bt.classList.remove('arrow-up')
    }
+   sortClients(clientsArray, 'FIO', false)
+   if (SortedUP) FIOBtn.classList.toggle('arrow-up')
+   })
+
+   // сортировка по Дате создания | навешивается на кнопку "Дата и время создания"
+   createdAtBtn.addEventListener('click', () => {
+   for (const bt of sortingBtns) {
+       bt.classList.remove('arrow-up')
+   }
+   sortClients(clientsArray, 'createdAt', true)
+   if (SortedUP) createdAtBtn.classList.toggle('arrow-up')
+   })
+
+   // сортировка по Дате последнего изменения | навешивается на кнопку "Последние изменения"
+   updatedAtBtn.addEventListener('click', () => {
+   for (const bt of sortingBtns) {
+       bt.classList.remove('arrow-up')
+   }
+   sortClients(clientsArray, 'updatedAt', true)
+   if (SortedUP) updatedAtBtn.classList.toggle('arrow-up')
+   })
+
+   // обработчик события input | навешивается на поисковую строку
+   searchInput.addEventListener('input', function(e) {
+      let delay = 1000
+      let timer
+      clearTimeout(timer)
+
+      timer = setTimeout(searchClients, delay, searchInput.value);
+   })
 
 }) ()
 
