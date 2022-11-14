@@ -84,6 +84,7 @@ body {
     font-weight: 700;
     border-radius: 50%;
     width: 50px;
+    min-width: 50px;
     height: 50px;
     display: flex;
     justify-content: center;
@@ -125,6 +126,8 @@ body {
     border-spacing: 0;
     margin-bottom: 40px;
     border-collapse: collapse;
+    /* min-width: 1000px;
+    overflow-x: hidden; */
 }
 
 .table__head {
@@ -178,7 +181,7 @@ body {
 }
 
 .table-body__contacts {
-    max-width: 116px;
+    width: 116px;
     display: flex;
     flex-wrap: wrap;
 }
@@ -501,6 +504,7 @@ body {
 .contact__input {
     height: 37px;
     border: 1px solid #C8C5D1;
+    border-left: none;
     background-color: transparent;
     border-right: none;
     padding-left: 12px;
@@ -611,4 +615,132 @@ body {
     font-size: 14px;
     line-height: 19px;
     margin-bottom: 25px;
+}
+
+/*          Selects             */
+
+.choices {
+    background-color: #C8C5D1;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: #333333;
+    width: 123px;
+    height: 37px;
+    /* border: 1px solid #C8C5D1; */
+    border: none;
+}
+
+.choices__inner {
+    background-color: #E7E5EB;
+    border: 1px solid #C8C5D1;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    border-radius: 0;
+    width: 123px;
+    height: 37px;
+    min-height: auto;
+}
+
+.choices__list--single {
+    padding: 2px 16px 4px 4px;
+}
+
+.choices[data-type*=select-one] .choices__inner {
+    padding-bottom: 0;
+}
+
+.is-open .choices__inner  {
+    border-radius: 0;
+    border: 1px solid #C8C5D1;
+    box-sizing: border-box;
+    top: 5px;   
+}
+
+.choices__list {
+    color: #333333;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.choices__item {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    max-height: 40px;
+    width: 100%;
+}
+
+.choices__list--dropdown .choices__item, .choices__list[aria-expanded] .choices__item {
+    font-size: 12px;
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+    background-color: #E7E5EB;
+}
+
+/* галочка */
+.choices[data-type*=select-one]::after {
+    border: none;
+    background-image: url(./img/arrov-contact.svg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 12px;
+    height: 7px;
+    top: 50%;
+    /* margin-top: 0; */
+}
+
+.choices[data-type*=select-one].is-open::after {
+    transform: rotate(180deg);
+    margin-top: -2px;
+}
+
+.choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
+    padding-right: 0;
+}
+
+
+/*                                  MEDIA                 */
+
+@media (max-width: 1000px) {
+
+    .table {
+        min-width: 930px;
+    }
+
+    .table-body__item {
+        padding: 10px 20px 10px 0;
+    }
+
+    .table-body__actions {
+        flex-wrap: wrap;
+    }
+    
+}
+
+@media (max-width: 400px) {
+
+.header__container {
+    justify-content: center;
+}
+
+.header__icon {
+    margin-right: 0;
+}
+
+.header__search {
+    display: none;
+}
+
 }

@@ -293,18 +293,6 @@
          const changeBtn = document.createElement('button')
          const deleteBtn = document.createElement('button')
 
-         // помещаю элементы друг в друга
-         actionsTd.append(actionsContainer)
-         actionsContainer.append(changeBtn)
-         actionsContainer.append(deleteBtn)
-         lastUpdateTd.append(lastUpdateSpan)
-         tr.append(IdTd)
-         tr.append(FIOTd)
-         tr.append(createDateTd)
-         tr.append(lastUpdateTd)
-         tr.append(contactsTd)
-         tr.append(actionsTd)
-
          // присваиваю элементам классы
          tr.classList.add('table-body__row', 'client')
          IdTd.classList.add('table-body__item', 'table-body-id')
@@ -407,6 +395,19 @@
          </svg>
          Удалить`
 
+         
+         // помещаю элементы друг в друга
+         actionsTd.append(actionsContainer)
+         actionsContainer.append(changeBtn)
+         actionsContainer.append(deleteBtn)
+         lastUpdateTd.append(lastUpdateSpan)
+         tr.append(IdTd)
+         tr.append(FIOTd)
+         tr.append(createDateTd)
+         tr.append(lastUpdateTd)
+         tr.append(contactsTd)
+         tr.append(actionsTd)
+
          // помещаю строку в таблицу
          tableBody.append(tr)
          // помещаю строку в массив строк
@@ -504,6 +505,13 @@
       contact.append(input)
       contact.append(button)
 
+      // choices
+      const choices = new Choices(select, {
+         searchEnabled: false,
+         placeholder: false,
+         itemSelectText:'',
+      });
+
       function del(e) {
          e.preventDefault()
          deleteContact(contact)
@@ -515,16 +523,6 @@
       }
 
       button.addEventListener('click', del)
-
-      // // select
-      // const selectElements = document.querySelectorAll('.js-choice');
-   
-      // for (const el of selectElements) {
-      //    clg(selectElements)
-      //    const choices = new Choices(el, {
-      //       searchEnabled: false,
-      //    });
-      // }
 
       return contact
    }
@@ -550,7 +548,8 @@
       cancelBtn = popup.querySelector('.popup-buttons__cancel-btn'),
       addContactBtn = popup.querySelector('.contacts-section__add-btn'),
       contactsContainer = popup.querySelector('.contacts-section__contacts-container'),
-      saveClientBtn = popup.querySelector('.popup-buttons__save-btn')
+      saveClientBtn = popup.querySelector('.popup-buttons__save-btn'),
+      errorMessage = popup.querySelector('.popup-buttons__error')
       // поля формы
       const inputs = popup.querySelectorAll('.change-data-form__input')
       const inputName = inputs[1]
@@ -561,13 +560,16 @@
       document.body.style.overflow = 'hidden'
              
       // очищаю список контактов
-      for (const contact of contactsContainer.children) {
-         contact.remove()
-      }
+      contactsContainer.innerHTML = ''
+
       // очищаю поля ввода
       for (const input of inputs) {
          input.value = ''
       }
+
+      // очищаю сообщение об ошибке
+      errorMessage.style.display = 'none'
+      errorMessage.textContent = ''
             
       const contactsSection = popup.querySelector('.contacts-section')
       contactsNum = 0
@@ -598,56 +600,70 @@
       // Добавление нового клиента
       async function saveNewClient(e) {
          e.preventDefault()
+         
+         // Валидация
+         console.log(inputName.value)
+         if (inputName.value == '') {
+            errorMessage.style.display = 'block'
+            errorMessage.textContent = 'Введите имя клиента!'
+         } else
+         if (inputSurname.value == '') {
+            errorMessage.style.display = 'block'
+            errorMessage.textContent = 'Введите фамилию клиента!'
+         } else {
 
-         //(1) часть, связанная со сбором и отправкой обновленных данных на сервер
-         const contacts = []
-         // собираю данные из полей контакты в массив contacts
-         for (const contactContainer of contactsContainer.children) {
-            
-            const selectData = contactContainer.children[0].value
-            const inputData = contactContainer.children[1].value
+            //(1) часть, связанная со сбором и отправкой обновленных данных на сервер
+            const contacts = []
+            // собираю данные из полей контакты в массив contacts
+            for (const contactContainer of contactsContainer.children) {
+               
+               const selectData = contactContainer.children[0].querySelector('.select').value
+               const inputData = contactContainer.children[1].value
 
-            const contact = {
-               type: selectData,
-               value: inputData
+               const contact = {
+                  type: selectData,
+                  value: inputData
+               }
+
+               contacts.push(contact)
+
             }
 
-            contacts.push(contact)
+            // обьект с данными о новом клиенте
+            const newClientData = {
+               name: inputName.value,
+               surname: inputSurname.value,
+               lastName: inputLast.value,
+               contacts: contacts
+            }
+            // отправка данных на сервер
+            await addClient(newClientData)
 
-         }
-         // обьект с данными о новом клиенте
-         const newClientData = {
-            name: inputName.value,
-            surname: inputSurname.value,
-            lastName: inputLast.value,
-            contacts: contacts
-         }
-         // отправка данных на сервер
-         await addClient(newClientData)
-
-         saveClientBtn.removeEventListener('click', saveNewClient)
+            saveClientBtn.removeEventListener('click', saveNewClient)
 
 
-         //(2) часть, связанная с обновлением списка клиентов и обновлением DOM елементов на странице
+            //(2) часть, связанная с обновлением списка клиентов и обновлением DOM елементов на странице
 
-         // очистка контактов
-         for (const contact of contactsContainer.children) {
-            contact.remove()
-         }
+            // очистка контактов
+            for (const contact of contactsContainer.children) {
+               contact.remove()
+            }
 
-         clientsArray = await getClients()
-         console.log(`1. сечение`)
-            // удаляю "устаревшие" tableElements 
-         for (const item of tableElements) {
-            item.remove()
-         }
+            clientsArray = await getClients()
+            console.log(`1. сечение`)
+               // удаляю "устаревшие" tableElements 
+            for (const item of tableElements) {
+               item.remove()
+            }
 
-         closePopup()
-         console.log(`2. сечение`)
-         tableElements = refreshTable(clientsArray)
+            closePopup()
+            console.log(`2. сечение`)
+            tableElements = refreshTable(clientsArray)
 
-         console.log(`3. сечение`)
-         console.log(clientsArray)
+            console.log(`3. сечение`)
+            console.log(clientsArray)
+
+      }
 
          // // НАВЕСИТЬ ОБРАБОТЧИКИ СОБЫТИЙ НА "НОВЫЕ" КНОПКИ!!!!!!
 
@@ -680,10 +696,9 @@
 
          addContactBtn.removeEventListener('click', f)
          saveClientBtn.removeEventListener('click', saveNewClient)
+         document.removeEventListener('keydown', esc)
 
-         for (const contact of contactsContainer.children) {
-            contact.remove()
-         }
+         contactsContainer.innerHTML = ''
          
          contactsSection.classList.remove('with-paddings')
       }
@@ -703,6 +718,15 @@
          closePopup(e)
       })
 
+      // закрытие по нажатию Esc
+      function esc(e) {
+         console.log(e.code)
+         if (e.code == 'Escape') {
+            closePopup()
+         } 
+      }
+      document.addEventListener('keydown', esc)
+
    }
 
    function openDeleteClientPopup(id) {
@@ -718,19 +742,38 @@
       // закрытие попапа
          // функция
       function closePopup(e) {
-         e.preventDefault()
+         if (e) {
+            console.log(e)
+            if (e.target == closeBtn || e.target == cancelBtn) {
+               e.preventDefault()
+            }
+         }
+
          popup.classList.remove('open')
          document.body.style.overflow = 'auto'
+         closeBtn.removeEventListener('click', closePopup)
+         cancelBtn.removeEventListener('click', closePopup)
          deleteBtn.removeEventListener('click', del)
+         document.removeEventListener('keydown', esc)
+         
       }
          // слушатели
       popup.addEventListener('click', (e) => {
          if (e.target === popupBody) {
-            closePopup(e)
+            closePopup()
          }
       })
       closeBtn.addEventListener('click', closePopup)
       cancelBtn.addEventListener('click', closePopup)
+
+      // закрытие по нажатию Esc
+      function esc(e) {
+         console.log(e.code)
+         if (e.code == 'Escape') {
+            closePopup()
+         } 
+      }
+      document.addEventListener('keydown', esc)
 
       // удаление клиента
          // функция 
@@ -766,11 +809,12 @@
       contactsNum = 0
 
       // очистка контактов
-      for (const contact of contactsContainer.children) {
-         contact.remove()
-         console.log(`Удаляю контакт со значением: ${contact.children[1].value}`)
-         // console.log(contact.children[1].value)
-      }
+      // for (const contact of contactsContainer.children) {
+      //    contact.remove()
+      //    console.log(`Удаляю контакт со значением: ${contact.children[1].value}`)
+      //    // console.log(contact.children[1].value)
+      // }
+      contactsContainer.innerHTML = ''
 
 
       // добавляю данные о контакте в соответствующие поля:
@@ -836,15 +880,25 @@
       // закрытие данного попапа
       function closePopup() {
          popup.classList.remove('open')
-            document.body.style.overflow = 'auto'
-            addContactBtn.removeEventListener('click', addCntc)
-            removeClientBtn.removeEventListener('click', del)
-            saveChangesBtn.removeEventListener('click', saveChanges)
+         document.body.style.overflow = 'auto'
 
-            for (const contact of contactsContainer.children) {
-               contact.remove()
-            }
+         addContactBtn.removeEventListener('click', addCntc)
+         removeClientBtn.removeEventListener('click', del)
+         saveChangesBtn.removeEventListener('click', saveChanges)
+         document.removeEventListener('keydown', esc)
+
+         contactsContainer.innerHTML = ''
       }
+
+      // закрытие по нажатию Esc
+      function esc(e) {
+         console.log(e.code)
+         if (e.code == 'Escape') {
+            closePopup()
+         } 
+      }
+      document.addEventListener('keydown', esc)
+
       // закрытие по затемненой области
       popup.addEventListener('click', (e) => {
          if (e.target === popupBody) {
@@ -864,7 +918,7 @@
          // собираю данные из полей контакты в массив contacts
          for (const contactContainer of contactsContainer.children) {
             
-            const selectData = contactContainer.children[0].value
+            const selectData = contactContainer.children[0].querySelector('.select').value
             const inputData = contactContainer.children[1].value
 
             const contact = {
@@ -882,9 +936,10 @@
             lastName: inputLast.value,
             contacts: contacts
          }
+         console.log(newClientData)
          // отправка обновленных данных на сервер
-         await changeClientDataById(id, newClientData)
-
+         let l = await changeClientDataById(id, newClientData)
+         console.log(l)
          saveChangesBtn.removeEventListener('click', saveChanges)
 
 
